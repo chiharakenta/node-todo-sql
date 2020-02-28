@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todoリスト</title>
+</head>
+<body>
+    <h1>Todoリスト</h1>
+    <form action="/create" method="post">
+        <input type="text" name="todoContent">
+        <input type="submit" value="作成">
+    </form>
+    <ul>
+        <% todos.map((todo) => { %>
+            <li><%= todo.id %> <%= todo.content %></li>
+            <!-- 編集へ行くボタン -->
+            <form action="/edit/<%= todo.id %>" method="get">
+                <input type="submit" value="編集">
+            </form>
+
+            <!-- 削除ボタン -->
+            <form action="/delete/<%= todo.id %>" method="post">
+                <input type="hidden" name="_method" value="delete"> <!-- 設定だけ -->
+                <input type="submit" value="削除">
+            </form>
+        <% }) %>
+    </ul>
+</body>
+</html>
