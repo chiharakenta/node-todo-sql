@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>編集</h1>
-    <form action="/update/<%= todo.id %>" method="post">
+    <form action="/todos/<%= todo.id %>" method="post">
         <input type="hidden" name="_method" value="put"> <!-- ここは単なる設定だけ -->
         <input type="text" name="todoContent" value="<%= todo.content %>">
         <input type="submit" value="更新">

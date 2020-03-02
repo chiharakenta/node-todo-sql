@@ -32,70 +32,18 @@ app.use(methodOverride(function (req, res) {
   }
 }));
 
-// データベース設定
-const mysql = require('mysql');
-// MySQLとのコネクションの作成
-const connection = mysql.createConnection({
-  host : 'localhost',
-  user : 'root',
-  database: 'node_todo'
-});
 
-// 一覧表示
+/* ルーティング設定 */
+
+// リダイレクト
 app.get('/', (req, res) => {
-  connection.query(
-    'SELECT * FROM todos',
-    (error, results) => {
-      res.render('index.ejs', { todos: results } );
-    }
-  );
+  res.redirect('/todos');
 });
 
-// 新規作成
-app.post('/create', (req, res) => {
-  connection.query(
-    'INSERT INTO todos (content) VALUE (?)',
-    [req.body.todoContent],
-    (error, results) => {
-      res.redirect('/');
-    }
-  );
-});
-
-// 編集
-app.get('/edit/:id', (req, res) => {
-  connection.query(
-    'SELECT * FROM todos WHERE id = ?',
-    [req.params.id],
-    (error, results) => {
-      res.render('edit.ejs', {todo: results[0]} );
-    }
-  );
-});
-
-// 更新
-app.put('/update/:id', (req, res) => {
-  connection.query(
-    'UPDATE todos SET content = ? WHERE id = ?',
-    [req.body.todoContent, req.params.id],
-    (error, results) => {
-      res.redirect('/');
-    }
-  );
-});
-
-// 削除
-app.delete('/delete/:id', (req, res) => {
-  connection.query(
-    'DELETE FROM todos WHERE id = ?',
-    [req.params.id],
-    (error, results) => {
-      res.redirect('/');
-    }
-  );
-});
-
-
+// ルーター使用
+const todosRouter = require('./routes/todos');
+app.use('/todos', todosRouter);
+/* ルーティング設定終わり */
 
 
 // catch 404 and forward to error handler
