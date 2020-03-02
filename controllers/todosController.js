@@ -12,7 +12,7 @@ exports.index = (req, res) => {
   connection.query(
     'SELECT * FROM todos',
     (error, results) => {
-      res.render('index.ejs', { todos: results } );
+      res.render('todos/index.ejs', { todos: results } );
     }
   );
 };
@@ -34,7 +34,7 @@ exports.edit =  (req, res) => {
     'SELECT * FROM todos WHERE id = ?',
     [req.params.id],
     (error, results) => {
-      res.render('edit.ejs', {todo: results[0]} );
+      res.render('todos/edit.ejs', {todo: results[0]} );
     }
   );
 };
