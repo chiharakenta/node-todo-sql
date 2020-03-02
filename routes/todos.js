@@ -26,5 +26,3 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   todos.delete(req, res);
 });
-
-module.exports = router;
