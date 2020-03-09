@@ -11,8 +11,33 @@
         <input type="text" name="todoContent">
         <input type="submit" value="作成">
     </form>
+    <h2>やること</h2>
     <ul>
-        <% todos.map((todo) => { %>
+        <% notDoneTodos.map((todo) => { %>
+            <li><%= todo.id %> <%= todo.content %></li>
+            <!-- 編集へ行くボタン -->
+            <form action="/edit/<%= todo.id %>" method="get">
+                <input type="submit" value="編集">
+            </form>
+
+            <!-- 削除ボタン -->
+            <form action="/delete/<%= todo.id %>" method="post">
+                <input type="hidden" name="_method" value="delete"> <!-- 設定だけ -->
+                <input type="submit" value="削除">
+            </form>
+
+            <!-- 完了ボタン -->
+            <form action="/complete/<%= todo.id %>" method="post">
+                <input type="hidden" name="_method" value="put"> <!-- 設定だけ -->
+                <input type="submit" value="完了">
+            </form>
+
+        <% }) %>
+    </ul>
+
+    <h2>終わったこと</h2>
+    <ul>
+        <% doneTodos.map((todo) => { %>
             <li><%= todo.id %> <%= todo.content %></li>
             <!-- 編集へ行くボタン -->
             <form action="/edit/<%= todo.id %>" method="get">

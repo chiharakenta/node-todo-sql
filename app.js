@@ -46,7 +46,10 @@ app.get('/', (req, res) => {
   connection.query(
     'SELECT * FROM todos',
     (error, results) => {
-      res.render('index.ejs', { todos: results } );
+      let todos = results;
+      let notDoneTodos = todos.filter(todo => !todo.done);
+      let doneTodos = todos.filter(todo => todo.done);
+      res.render('index.ejs', { notDoneTodos: notDoneTodos, doneTodos: doneTodos } );
     }
   );
 });
@@ -82,6 +85,17 @@ app.put('/update/:id', (req, res) => {
       res.redirect('/');
     }
   );
+});
+
+// 完了
+app.put('/complete/:id', (req, res) => {
+  connection.query(
+    'UPDATE todos SET done = 1 WHERE id = ?',
+    [req.params.id],
+    (error, results) => {
+      res.redirect('/');
+    }
+  )
 });
 
 // 削除
