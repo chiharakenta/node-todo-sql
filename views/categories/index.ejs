@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todoリスト</title>
+</head>
+<body>
+    <h1>カテゴリーの管理</h1>
+    <form action="/categories" method="post">
+        <input type="text" name="categoryName">
+        <input type="submit" value="作成">
+    </form>
+    <ul>
+        <% categories.map((category) => { %>
+            <li><%= category.name %></li>
+            <form action="/categories/<%= category.id %>" method="post">
+                <input type="hidden" name="_method" value="delete">
+                <input type="submit" value="削除">
+            </form>
+            <a href="/categories/<%= category.id %>/edit">編集</a>
+        <% }) %> 
+    </ul>
+    <a href="/">タスク一覧に戻る</a>
+</body>
+</html>

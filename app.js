@@ -44,12 +44,9 @@ const connection = mysql.createConnection({
 // 一覧表示
 app.get('/', (req, res) => {
   connection.query(
-    'SELECT * FROM todos',
+    'SELECT categories.*, GROUP_CONCAT(todos.content) AS todos FROM categories LEFT JOIN todos ON categories.id = todos.category_id GROUP BY categories.id',
     (error, results) => {
-      let todos = results;
-      let notDoneTodos = todos.filter(todo => !todo.done);
-      let doneTodos = todos.filter(todo => todo.done);
-      res.render('index.ejs', { notDoneTodos: notDoneTodos, doneTodos: doneTodos } );
+      res.render('index.ejs', { categories: results } )
     }
   );
 });
@@ -57,9 +54,10 @@ app.get('/', (req, res) => {
 // 新規作成
 app.post('/create', (req, res) => {
   connection.query(
-    'INSERT INTO todos (content) VALUE (?)',
-    [req.body.todoContent],
+    'INSERT INTO todos (content, category_id) VALUE (?, ?)',
+    [req.body.todoContent, req.body.categoryId],
     (error, results) => {
+      console.log(results);
       res.redirect('/');
     }
   );
@@ -109,8 +107,57 @@ app.delete('/delete/:id', (req, res) => {
   );
 });
 
+// カテゴリーの新規作成画面
+app.get('/categories', (req, res) => {
+  connection.query(
+    'SELECT * FROM categories',
+    (error, results) => {
+      res.render('categories/index.ejs', { categories: results } );
+    }
+  );
+});
 
+// カテゴリーの追加
+app.post('/categories', (req, res) => {
+  connection.query(
+    'INSERT INTO categories (name) VALUE (?)',
+    [req.body.categoryName],
+    (error, results) => {
+      res.redirect('/categories');
+    }
+  );
+});
 
+app.get('/categories/:id/edit', (req, res) => {
+  connection.query(
+    'SELECT * FROM categories WHERE id = ?',
+    [req.params.id],
+    (error, results) => {
+      res.render('categories/edit.ejs', {category: results[0]} );
+    }
+  );
+});
+
+app.put('/categories/:id', (req, res) => {
+  connection.query(
+    'UPDATE categories SET name = ? WHERE id = ?',
+    [req.body.categoryName, req.params.id],
+    (error, results) => {
+      res.redirect('/categories');
+    }
+  );
+});
+
+// カテゴリーの削除
+app.delete('/categories/:id', (req, res) => {
+  connection.query(
+    'DELETE FROM categories WHERE id = ?',
+    [req.params.id],
+    (error, results) => {
+      res.redirect('/categories');
+    }
+  );
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
