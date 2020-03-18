@@ -22,7 +22,7 @@
         <% categories.map((category) => { %>
             <li><%= category.name %></li>
             <ul>
-                <% if (category.todos != null) { %>
+                <% if (category.todos) { %>
                     <% let todos = category.todos.split(','); %>
                     <% todos.map((todo) => { %>
                         <li><%= todo %></li>
